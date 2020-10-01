@@ -6,19 +6,17 @@ def n_qualifies(number):
     for i in range(6):
         number_str = str(number)
         list.append(int(number_str[i]))
-   
-    qualifies = False
+
     for i in range(5):
-        if list[i] == list[i + 1]:
-            qualifies = True
+        if list[i + 1] < list[i]:
+            return False
 
-    if qualifies:
-        for i in range(5):
-            if list[i + 1] < list[i]:
-                qualifies = False
+    for i in range(5):
+        if (list[i] == list[i + 1]) and ((i == 4) or (list[i] != list[i + 2])) \
+            and ((i == 0) or (list[i] != list[i - 1])):
+            return True
 
-    return qualifies
-
+    return False
 
 count = 0
 
