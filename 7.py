@@ -3,96 +3,88 @@
 
 class Intcode():
 
-    def __init__(self, cb):
+    def __init__(self, cb, phase):
         self.cb = cb
         self.i = 0
         self.int_array = int_array[:]
-        self.operate(None)
+        self.phase = phase
 
-    def operate(self, input):
+    def operate(self, phase, input): #@@@ could we change this to actually just run ./5.py
         print("run input: " + str(input))
 
         while (self.i <= len(self.int_array)):
 
-            code = str(self.int_array[self.i])
-            op_code = int(code[-2:])
+            self.code = str(self.int_array[self.i])
+            self.op_code = int(self.code[-2:])
 
-            param_codes = [0,0,0]
-            for j in range(3):
-                if len(code) >= j + 3:
-                    param_codes[j] = int(code[-3 - j])
+            self.param_codes = [0,0,0]
+            self.values = [0,0,0]
+            for self.j in range(3):
+                if len(self.code) >= self.j + 3:
+                self.param_codes[j] = int(self.code[-3 - self.j])
 
-            if op_code == 1 or op_code == 2 or op_code == 4:
-                if param_codes[0] == 0:
-                    value1 = self.int_array[self.int_array[self.i + 1]]
-                elif param_codes[0] == 1:
-                    value1 = self.int_array[self.i + 1]
+            for self.val in range(3):
+                if self.param_codes[val] == 0:
+                    if len(self.int_array) > self.i + 1 + self.val and \
+                       len(self.int_array) > self.int_array[self.i + 1 + self.val]:
+                        self.values[val] = self.int_array[self.int_array[self.i + 1 + self.val]]
+                elif self.param_codes[self.val] == 1:
+                    if len(self.int_array) > i + 1 + self.val:
+                        self.values[self.val] = self.int_array[self.i + 1 + self.val]
 
-            if op_code == 1 or op_code == 2:
-                if param_codes[1] == 0:
-                    value2 = self.int_array[self.int_array[self.i + 2]]
-                elif param_codes[1] == 1:
-                    value2 = self.int_array[self.i + 2]
-
-            if op_code == 99:
+            if self.op_code == 99:
                 break
-            elif op_code == 1:
-                self.int_array[self.int_array[3 + self.i]] = value1 + value2
-                self.i = self.i + 4
-            elif op_code == 2:
-                self.int_array[self.int_array[3 + self.i]] = value1 * value2
-                self.i = self.i + 4
-            elif op_code == 3:
-                if input is not None:
-                    self.int_array[self.int_array[1 + self.i]] = int(input)
-                    self.i = self.i + 2
-                    input = None
+            elif self.op_code == 1:
+                self.int_array[self.int_array[3 + self.i]] = self.values[0] + self.values[1]
+                self.i += 4
+            elif self.op_code == 2:
+                self.int_array[self.int_array[3 + self.i]] = self.values[0] * self.values[1]
+                self.i += 4
+            elif self.op_code == 3:
+                self.int_array[self.int_array[1 + self.i]] = #@@@ look at phase and input here
+                self.i += 2
+            elif self.op_code == 4:
+                print(self.values[0]) #@@@ call callback function
+                self.i += 2
+            elif self.op_code == 5:
+                if self.values[0] != 0:
+                    self.i = self.values[1]
                 else:
-                    break
-            elif op_code == 4:
-                print("Output: " + str(value1))
-                self.cb(value1)
-                self.i = self.i + 2
+                    self.i += 3
+            elif self.op_code == 6:
+                if self.values[0] == 0:
+                    self.i = self.values[1]
+                else:
+                    self.i += 3
+            elif self.op_code == 7:
+                if self.values[0] < self.values[1]:
+                    self.int_array[self.int_array[3 + self.i]] = 1
+                else:
+                    self.int_array[self.int_array[3 + self.i]] = 0
+                self.i += 4
+            elif self.op_code == 8:
+                if self.values[0] == self.values[1]:
+                    self.int_array[self.int_array[3 + self.i]] = 1
+                else:
+                    self.int_array[self.int_array[3 + self.i]] = 0
+                self.i += 4
             else:
-                print("Unexpected array element " + str(op_code) + " code: " + code)
-                print(self.int_array)
+                print("Unexpected array element " + str(self.op_code))
+                print(self.int_array[:7])
+                print(self.code)
                 break
 
-
-def cb_a(output):
-    b.operate(output)
-
-def cb_b(output):
-    c.operate(output)
-
-def cb_c(output):
-    d.operate(output)
-
-def cb_d(output):
-    e.operate(output)
-
-def cb_e(output):
-    print(output)
-
-with open('int_array3.txt', 'r') as f:
+with open('int_array7.txt', 'r') as f:
     line = f.readline()
     int_array = [int(num) for num in line.split(",")]
 
+phases = [0,1,2,3,4]
 
-#@@@ DGM improve with arrays
-a = Intcode(cb_a)
-b = Intcode(cb_b)
-c = Intcode(cb_c)
-d = Intcode(cb_d)
-e = Intcode(cb_e)
-
-a.operate(1)
-b.operate(0)
-c.operate(4)
-d.operate(3)
-e.operate(2)
+a = Intcode(b.operate, phases[0])
+b = Intcode(c.operate, phases[1])
+c = Intcode(d.operate, phases[2])
+d = Intcode(e.operate, phases[3])
+e = Intcode(print(), phases[4])
 
 
-# Initial input for amp a is 0
-a.operate(0)
-
+a.operate()
