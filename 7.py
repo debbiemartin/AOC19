@@ -8,26 +8,37 @@ class Intcode():
     def __init__(self, cb, phase):
         self.cb = cb
         self.phase = phase
+        self.p = Popen(['python3', '-u', './5.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        phasestr = str(self.phase + 5) + "\n"
+        self.p.stdin.write(phasestr.encode('utf-8'))
+
+    def set_cb(self, cb):
+        self.cb = cb
 
     def operate(self, input):
-        p = Popen(['./5.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
-        phasestr = str(self.phase) + "\n"
-        p.stdin.write(phasestr.encode('utf-8'))
-        stdout, stderr = p.communicate(input=input)
-        self.cb(stdout)
+        self.p.stdin.write(input)
+        try:
+            self.p.stdin.flush()
+        except BrokenPipeError:
+            pass
+        output = self.p.stdout.readline()
+        if output == b'':
+            phase_answer(input)
+        else:
+            self.cb(output)
 
 def phase_answer(input):
     global MAXIMUM
-    #print("Output from E is: {}".format(input.decode('utf-8')))
     if int(input.decode('utf-8')) > MAXIMUM:
         MAXIMUM = int(input.decode('utf-8'))
 
 def test_permutation(phases):
-    e = Intcode(phase_answer, phases[4])
+    e = Intcode(None, phases[4])
     d = Intcode(e.operate, phases[3])
     c = Intcode(d.operate, phases[2])
     b = Intcode(c.operate, phases[1])
     a = Intcode(b.operate, phases[0])
+    e.set_cb(a.operate)
 
     a.operate("0\n".encode('utf-8'))
 
