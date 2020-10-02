@@ -1,90 +1,47 @@
-#!/auto/ensoft/bin/python
+#!/auto/ensoft/bin/python3
 
+from subprocess import Popen, PIPE, STDOUT
+import time
 
+MAXIMUM=0
 class Intcode():
-
     def __init__(self, cb, phase):
         self.cb = cb
-        self.i = 0
-        self.int_array = int_array[:]
         self.phase = phase
 
-    def operate(self, phase, input): #@@@ could we change this to actually just run ./5.py
-        print("run input: " + str(input))
+    def operate(self, input):
+        p = Popen(['./5.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        phasestr = str(self.phase) + "\n"
+        p.stdin.write(phasestr.encode('utf-8'))
+        stdout, stderr = p.communicate(input=input)
+        self.cb(stdout)
 
-        while (self.i <= len(self.int_array)):
+def phase_answer(input):
+    global MAXIMUM
+    #print("Output from E is: {}".format(input.decode('utf-8')))
+    if int(input.decode('utf-8')) > MAXIMUM:
+        MAXIMUM = int(input.decode('utf-8'))
 
-            self.code = str(self.int_array[self.i])
-            self.op_code = int(self.code[-2:])
+def test_permutation(phases):
+    e = Intcode(phase_answer, phases[4])
+    d = Intcode(e.operate, phases[3])
+    c = Intcode(d.operate, phases[2])
+    b = Intcode(c.operate, phases[1])
+    a = Intcode(b.operate, phases[0])
 
-            self.param_codes = [0,0,0]
-            self.values = [0,0,0]
-            for self.j in range(3):
-                if len(self.code) >= self.j + 3:
-                self.param_codes[j] = int(self.code[-3 - self.j])
+    a.operate("0\n".encode('utf-8'))
 
-            for self.val in range(3):
-                if self.param_codes[val] == 0:
-                    if len(self.int_array) > self.i + 1 + self.val and \
-                       len(self.int_array) > self.int_array[self.i + 1 + self.val]:
-                        self.values[val] = self.int_array[self.int_array[self.i + 1 + self.val]]
-                elif self.param_codes[self.val] == 1:
-                    if len(self.int_array) > i + 1 + self.val:
-                        self.values[self.val] = self.int_array[self.i + 1 + self.val]
+def test_phase(phases, index):
+    if index < 4:
+        for i in range(5):
+            if not any(i == phases[j] for j in range(index + 1)):
+                phases[index + 1] = i
+                test_phase(phases, index + 1)
+    elif index == 4:
+        # All filled in - test permutation
+        test_permutation(phases)
 
-            if self.op_code == 99:
-                break
-            elif self.op_code == 1:
-                self.int_array[self.int_array[3 + self.i]] = self.values[0] + self.values[1]
-                self.i += 4
-            elif self.op_code == 2:
-                self.int_array[self.int_array[3 + self.i]] = self.values[0] * self.values[1]
-                self.i += 4
-            elif self.op_code == 3:
-                self.int_array[self.int_array[1 + self.i]] = #@@@ look at phase and input here
-                self.i += 2
-            elif self.op_code == 4:
-                print(self.values[0]) #@@@ call callback function
-                self.i += 2
-            elif self.op_code == 5:
-                if self.values[0] != 0:
-                    self.i = self.values[1]
-                else:
-                    self.i += 3
-            elif self.op_code == 6:
-                if self.values[0] == 0:
-                    self.i = self.values[1]
-                else:
-                    self.i += 3
-            elif self.op_code == 7:
-                if self.values[0] < self.values[1]:
-                    self.int_array[self.int_array[3 + self.i]] = 1
-                else:
-                    self.int_array[self.int_array[3 + self.i]] = 0
-                self.i += 4
-            elif self.op_code == 8:
-                if self.values[0] == self.values[1]:
-                    self.int_array[self.int_array[3 + self.i]] = 1
-                else:
-                    self.int_array[self.int_array[3 + self.i]] = 0
-                self.i += 4
-            else:
-                print("Unexpected array element " + str(self.op_code))
-                print(self.int_array[:7])
-                print(self.code)
-                break
+for i in range(5):
+    test_phase([i,0,0,0,0], 0)
 
-with open('int_array7.txt', 'r') as f:
-    line = f.readline()
-    int_array = [int(num) for num in line.split(",")]
-
-phases = [0,1,2,3,4]
-
-a = Intcode(b.operate, phases[0])
-b = Intcode(c.operate, phases[1])
-c = Intcode(d.operate, phases[2])
-d = Intcode(e.operate, phases[3])
-e = Intcode(print(), phases[4])
-
-
-a.operate()
+print("Maximum found: {}".format(MAXIMUM))
