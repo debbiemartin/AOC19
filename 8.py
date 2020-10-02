@@ -15,7 +15,7 @@ with open("image.txt", 'r') as file:
 layercount = int(len(data)/(WIDTH*HEIGHT))
 
 # create layers matrix
-layers=[]
+layers = []
 for layernum in range(layercount):
     layer = []
     for rownum in range(HEIGHT):
@@ -25,13 +25,22 @@ for layernum in range(layercount):
         layer.append(row)
     layers.append(layer)
 
-# find layer with fewest 0 digits
-min_zeros = 0
-for layer in layers:
-    # count 0 digits
-    zeros = count_occurrences(layer, 0)
-    if zeros < min_zeros or min_zeros == 0:
-        min_zeros = zeros
-        answer = count_occurrences(layer, 1) * count_occurrences(layer, 2)
+# add each element through the layers in following:
+#   if 0 hit first then black
+#   if 1 hit first then white
+image = []
+for rownum in range(HEIGHT):
+    row = []
+    for colnum in range(WIDTH):
+        for layer in layers:
+            if layer[rownum][colnum] == 0:
+                row.append(' ')
+                break
+            elif layer[rownum][colnum] == 1:
+                row.append('O')
+                break
+        else:
+            print("didnt find non-transparent")
+    image.append(row)
 
-print(answer)
+print(print(*(' '.join(row) for row in image), sep='\n'))
