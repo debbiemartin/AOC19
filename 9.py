@@ -4,7 +4,7 @@ from collections import defaultdict
 
 RELATIVE_BASE=0
 
-with open('int_array9.txt', 'r') as f:
+with open('11/instructions.txt', 'r') as f: #@@@ changed for 11
     line = f.readline()
     int_array_temp = [int(num) for num in line.split(",")]
 
