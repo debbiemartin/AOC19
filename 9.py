@@ -45,6 +45,7 @@ while (True):
         int_array[values[2]] = int_array[values[0]] * int_array[values[1]]
         i = i + 4
     elif op_code == 3:
+        print("Need input")
         int_array[values[0]] = int(input())
         i = i + 2
     elif op_code == 4:
