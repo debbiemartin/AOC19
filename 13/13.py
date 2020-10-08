@@ -47,12 +47,10 @@ def plot(tiles, score):
 
 
 
-def play(moves):
+def play():
     #    If the joystick is in the neutral position, provide 0.
     #    If the joystick is tilted to the left, provide -1.
     #    If the joystick is tilted to the right, provide 1.
-    lastpaddlehit = 0
-    ballonelowerthanpaddle = 0
 
     p = Popen(['python3', '-u', './9.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
     tiles = {}
@@ -61,10 +59,6 @@ def play(moves):
     while True:
         score = get_tiles(p, tiles, score)
         #plot(tiles, score)
-        if len(moves) <= i:
-            moves.append(0)
-        p.stdin.write("{}\n".format(moves[i]).encode('utf-8'))
-        p.stdin.flush()
 
         for key, val in tiles.items():
             if val == 4:
@@ -72,35 +66,31 @@ def play(moves):
             elif val == 3:
                 paddle_coords = key
 
-        if ball_coords[1] == paddle_coords[1]: #@@@ should we go on score not this??
+        num_blocks = sum(1 for value in tiles.values() if value == 2)
+
+        if ball_coords[1] == paddle_coords[1]:
             # ball is travelling past paddle
             balldiff = ball_coords[0] - paddle_coords[0]
+            print("ball passed paddle...")
             break
-        else:
-            # need to make sure it doesnt go past paddle to be a paddle hit
-            lastpaddlehit = ballonelowerthanpaddle
+        elif num_blocks == 0:
+            print("Finished!!! all blocks gone")
+            break
 
-        if ball_coords[1] == paddle_coords[1] - 1:
-            # ball is 1 below paddle, but may not necessarily hit
-            ballonelowerthanpaddle = i
+        nextmove = (0 if ball_coords[0] == paddle_coords[0] else (1 if ball_coords[0] > paddle_coords[0] else -1))
+
+        p.stdin.write("{}\n".format(nextmove).encode('utf-8'))
+        p.stdin.flush()
 
         endscore = score
         i += 1
 
-    num_blocks = sum(1 for value in tiles.values() if value == 2)
-    return (num_blocks, lastpaddlehit, endscore, balldiff)
+    return (num_blocks, endscore, balldiff, i)
 
 def smash_all_blocks():
-    moves = []
     num_blocks = -1
-    while num_blocks != 0:
-        num_blocks, lastpaddlehit, endscore, balldiff = play(moves)
-        print("iteration num_blocks {} lastpaddlehit {} endscore {} balldiff {} ".format(num_blocks, lastpaddlehit, endscore, balldiff))
-        if abs(balldiff) > len(moves) - lastpaddlehit:
-            print("can't solve this: balldiff is {}, endnum {}, lastpaddlehit{}")
-            break
 
-        for i in range(1, abs(balldiff) + 1):
-            moves[lastpaddlehit + i] = (-1 if balldiff < 0 else 1)
+    num_blocks, endscore, balldiff, moves = play()
+    print("iteration num_blocks {} endscore {} balldiff {} nummoves {}".format(num_blocks, endscore, balldiff, moves))
 
 smash_all_blocks()
