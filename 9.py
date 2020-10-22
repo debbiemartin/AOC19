@@ -1,10 +1,15 @@
 #!/auto/ensoft/bin/python3
 
+#@@@ DGM improvement: make this have an API which passes back the outputs and
+#    takes in input, really annoying having to use Popen all over the place
+#    decoding the stdout etc
+
 from collections import defaultdict
+import sys
 
 RELATIVE_BASE=0
 
-with open('15/instructions.txt', 'r') as f: #@@@ changed for 15 #@@@ put this through as an arg to the invocation
+with open(sys.argv[1], 'r') as f:
     line = f.readline()
     int_array_temp = [int(num) for num in line.split(",")]
 

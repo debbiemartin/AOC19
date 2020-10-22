@@ -14,11 +14,11 @@ def calc_fuel(mass):
 def account_for_fuel(fuel):
     additional_fuel = calc_fuel(fuel)
     if additional_fuel > 0:
-        total = account_for_fuel(additional_fuel) #@@@ DGM where to add this to total??
+        total = account_for_fuel(additional_fuel)
         return (total + fuel)
-    else: 
+    else:
         return (fuel)
-        
+
 
 
 def main():
@@ -27,13 +27,13 @@ def main():
         for line in f:
             fuel = calc_fuel(int(line))
             fuel = account_for_fuel(fuel)
-            
+
             total_fuel = total_fuel + fuel
     print(total_fuel)
-    
+
 
 if __name__ == "__main__":
     main()
 
-    
-    
+
+
