@@ -1,4 +1,4 @@
-#!/auto/ensoft/bin/python3
+#!/usr/bin/python3
 
 from subprocess import Popen, PIPE, STDOUT
 import time
@@ -8,7 +8,7 @@ class Intcode():
     def __init__(self, cb, phase):
         self.cb = cb
         self.phase = phase
-        self.p = Popen(['python3', '-u', './5.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        self.p = Popen(['python3', '-u', './5.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE) #@@@ pass through filename as arg
         phasestr = str(self.phase + 5) + "\n"
         self.p.stdin.write(phasestr.encode('utf-8'))
 

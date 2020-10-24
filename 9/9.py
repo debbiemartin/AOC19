@@ -1,4 +1,4 @@
-#!/auto/ensoft/bin/python3
+#!/usr/bin/python3
 
 #@@@ DGM improvement: make this have an API which passes back the outputs and
 #    takes in input, really annoying having to use Popen all over the place

@@ -1,4 +1,4 @@
-#!/auto/ensoft/bin/python
+#!/usr/bin/python
 
 orbits = {} # planet with a list of orbiteds
 hops_from_you = {} # planet with shortest number of hops from you

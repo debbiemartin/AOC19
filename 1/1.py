@@ -1,4 +1,4 @@
-#!/auto/ensoft/bin/python
+#!/usr/bin/python
 
 import sys
 import math
@@ -23,7 +23,7 @@ def account_for_fuel(fuel):
 
 def main():
     total_fuel = 0
-    with open('spaceship_data.txt', 'r') as f:
+    with open('1/spaceship_data.txt', 'r') as f:
         for line in f:
             fuel = calc_fuel(int(line))
             fuel = account_for_fuel(fuel)

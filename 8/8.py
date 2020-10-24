@@ -1,4 +1,4 @@
-#!/auto/ensoft/bin/python3
+#!/usr/bin/python3
 
 WIDTH=25
 HEIGHT=6
@@ -9,7 +9,7 @@ def count_occurrences(layer, num):
         count += row.count(num)
     return count
 
-with open("image.txt", 'r') as file:
+with open("8/image.txt", 'r') as file:
     data = file.readline()
 
 layercount = int(len(data)/(WIDTH*HEIGHT))

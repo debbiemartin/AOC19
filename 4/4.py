@@ -1,4 +1,4 @@
-#!/auto/ensoft/bin/python
+#!/usr/bin/python
 
 def n_qualifies(number):
     list = []

@@ -1,10 +1,10 @@
-#!/auto/ensoft/bin/python
+#!/usr/bin/python
 
 # @@@ for testing
 #instructions_a = ['R75','D30','R83','U83','L12','D49','R71','U7','L72']
 #instructions_b = ['U62','R66','U55','R34','D71','R55','D58','R83']
 
-with open('instructions.txt', 'r') as f:
+with open('3/instructions.txt', 'r') as f:
     line = f.readline()
     instructions_a = [instruction.strip('\n') for instruction in line.split(",")]
     line = f.readline()

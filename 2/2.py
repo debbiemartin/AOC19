@@ -1,6 +1,6 @@
-#!/auto/ensoft/bin/python
+#!/usr/bin/python
 
-with open('int_array.txt', 'r') as f:
+with open('2/int_array.txt', 'r') as f:
     line = f.readline()
     int_array_original = [int(num) for num in line.split(",")]
 

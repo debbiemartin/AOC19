@@ -1,4 +1,4 @@
-#!/auto/ensoft/bin/python3
+#!/usr/bin/python3
 
 import math
 import collections
@@ -13,7 +13,7 @@ def los_equivalent(los1, los2):
 
 
 asteroids = []
-with open("asteroids.txt", 'r') as f:
+with open("10/asteroids.txt", 'r') as f:
     lines = f.readlines()
     for linenum, line in enumerate(lines):
         for charnum, char in enumerate(line):

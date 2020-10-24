@@ -1,4 +1,4 @@
-#!/auto/ensoft/bin/python3
+#!/usr/bin/python3
 
 with open('int_array7.txt', 'r') as f: #@@@ changed for use in ex7
     line = f.readline()
