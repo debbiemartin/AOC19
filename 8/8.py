@@ -28,7 +28,6 @@ for layernum in range(layercount):
 # add each element through the layers in following:
 #   if 0 hit first then black
 #   if 1 hit first then white
-image = []
 for rownum in range(HEIGHT):
     row = []
     for colnum in range(WIDTH):
@@ -41,6 +40,4 @@ for rownum in range(HEIGHT):
                 break
         else:
             print("didnt find non-transparent")
-    image.append(row)
-
-print(print(*(' '.join(row) for row in image), sep='\n'))
+    print(' '.join(row))

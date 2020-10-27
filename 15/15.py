@@ -7,10 +7,11 @@ import copy
 
 class InvalidDirectionError(Exception):
     pass
+
 class Droid(object):
     CODE_PLOT = ["#", ".", "O"]
     def __init__(self):
-        self.p = Popen(['python3', '-u', './9.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        self.p = Popen(['python3', '-u', '9/9.py', '15/instructions.txt'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
         self.current_coord = (0,0)
         self.coords = {(0,0): 1} # empty space at (0,0)
 

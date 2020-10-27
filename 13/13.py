@@ -52,7 +52,8 @@ def play():
     #    If the joystick is tilted to the left, provide -1.
     #    If the joystick is tilted to the right, provide 1.
 
-    p = Popen(['python3', '-u', './9.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
+    p = Popen(['python3', '-u', '9/9.py', '13/instructions.txt'], 
+              stdout=PIPE, stdin=PIPE, stderr=PIPE)
     tiles = {}
     i = 0
     score = 0
@@ -70,7 +71,6 @@ def play():
 
         if ball_coords[1] == paddle_coords[1]:
             # ball is travelling past paddle
-            balldiff = ball_coords[0] - paddle_coords[0]
             print("ball passed paddle...")
             break
         elif num_blocks == 0:
@@ -82,15 +82,14 @@ def play():
         p.stdin.write("{}\n".format(nextmove).encode('utf-8'))
         p.stdin.flush()
 
-        endscore = score
         i += 1
 
-    return (num_blocks, endscore, balldiff, i)
+    return (num_blocks, score, i)
 
 def smash_all_blocks():
     num_blocks = -1
 
-    num_blocks, endscore, balldiff, moves = play()
-    print("iteration num_blocks {} endscore {} balldiff {} nummoves {}".format(num_blocks, endscore, balldiff, moves))
+    num_blocks, endscore, moves = play()
+    print("iteration num_blocks {} endscore {} nummoves {}".format(num_blocks, endscore, moves))
 
 smash_all_blocks()

@@ -17,7 +17,7 @@ def calculate_hops(planet, hops, lookup):
         for orbitted_planet in orbits[planet]:
             calculate_hops(orbitted_planet, hops + 1, lookup)
 
-with open('orbits.txt', 'r') as f:
+with open('6/orbits.txt', 'r') as f:
     for line in f:
         orbit_pair = line.split(")")
         orbit_pair[1] = orbit_pair[1].strip('\n')

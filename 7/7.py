@@ -8,7 +8,8 @@ class Intcode():
     def __init__(self, cb, phase):
         self.cb = cb
         self.phase = phase
-        self.p = Popen(['python3', '-u', './5.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE) #@@@ pass through filename as arg
+        self.p = Popen(['python3', '-u', '5/5.py', '7/int_array7.txt'],
+                       stdout=PIPE, stdin=PIPE, stderr=PIPE)
         phasestr = str(self.phase + 5) + "\n"
         self.p.stdin.write(phasestr.encode('utf-8'))
 

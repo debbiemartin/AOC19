@@ -2,16 +2,24 @@
 
 from subprocess import Popen, PIPE, STDOUT
 
-p = Popen(['python3', '-u', './9.py'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
+#@@@ DGM this is broken
+
+def write_stdin(content):
+    global p
+    line = p.stdout.readline() # read the "Need input"
+    if line != b"Need input\n":
+        return
+    p.stdin.write("{}\n".format(content).encode('utf-8'))
+    p.stdin.flush()
+
+p = Popen(['python3', '-u', '9/9.py', '11/instructions.txt'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
 
 matrix = {}
 coord = (0, 0)
 dir = (0, 1)
 
+write_stdin("1")
 while True:
-    p.stdin.write(b"1\n")
-
-    p.stdin.flush()
     output1 = p.stdout.readline()
     output2 = p.stdout.readline()
 
@@ -35,9 +43,9 @@ while True:
     coord = tuple(map(sum,zip(coord,dir))) #@@@ list would have been easier
 
     if coord in matrix:
-        p.stdin.write(matrix[coord])
+        write_stdin(matrix[coord])
     else:
-        p.stdin.write(b"0\n")
+        write_stdin("0")
 
 print("Matrix size at end: {}".format(len(matrix)))
 
@@ -57,7 +65,6 @@ plot[- YMIN][-XMIN] = "O"
 
 # paint each matrix element:
 for key, val in sorted(matrix.items()):
-    print(key)
     plot[- key[1] + YMAX][key[0] - XMIN] = (" " if val == b"0\n" else "O")
 
 #print it

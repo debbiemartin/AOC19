@@ -4,7 +4,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 class ASCII(object):
     def __init__(self, txtfile):
-        self.p = Popen(['python3', '-u', './9.py', txtfile],
+        self.p = Popen(['python3', '-u', '9/9.py', txtfile],
                        stdout=PIPE, stdin=PIPE, stderr=PIPE)
         self.coords = {}
 
@@ -25,7 +25,6 @@ class ASCII(object):
                 coord = (coord[0] + 1, coord[1])
 
     def _writestdin(self, input):
-        print(f"writing to stdin: {input}")
         self.p.stdin.write("{}\n".format(input).encode('utf-8'))
         self.p.stdin.flush()
         if True: #not end:
@@ -36,7 +35,7 @@ class ASCII(object):
                 elif output == "":
                     return
                 elif int(output) > 137:
-                    print(f"have i found the answer??? {output}")
+                    print(f"Answer: {output}")
                 else:
                     print(chr(int(output)), end="")
 

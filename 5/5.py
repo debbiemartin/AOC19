@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+import sys
 
-with open('int_array7.txt', 'r') as f: #@@@ changed for use in ex7
+with open(sys.argv[1], 'r') as f:
     line = f.readline()
     int_array = [int(num) for num in line.split(",")]
 
