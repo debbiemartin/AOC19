@@ -13,6 +13,7 @@ class IntComp(object):
             self.int_array = {i:int(num) for i, num in enumerate(line.split(","))}
 
         self.events = {}
+        self.need_input = False
         for key in ["input_write", "input_read", "output_write", "output_read"]:
             self.events[key] = threading.Event()
 
@@ -51,6 +52,7 @@ class IntComp(object):
                 int_array[values[2]] = int_array[values[0]] * int_array[values[1]]
                 i = i + 4
             elif op_code == 3:
+                self.need_input = True
                 self.events["input_write"].wait()
                 self.events["input_write"].clear()
                 int_array[values[0]] = self.input_val
@@ -99,8 +101,12 @@ class IntComp(object):
         assert(not self.events["input_write"].is_set())
         self.events["input_write"].set()
         self.input_val = number
+        self.need_input = False
         self.events["input_read"].wait()
         self.events["input_read"].clear()
+    
+    def input_needed(self):
+        return self.need_input
     
     def output(self):
         self.events["output_write"].wait()
