@@ -13,7 +13,8 @@ class IntComp(object):
             self.int_array = {i:int(num) for i, num in enumerate(line.split(","))}
 
         self.events = {}
-        self.need_input = False
+        self.stoprun = False
+        self.outputdone = False
         for key in ["input_write", "input_read", "output_write", "output_read"]:
             self.events[key] = threading.Event()
 
@@ -22,7 +23,7 @@ class IntComp(object):
         
         i = 0
         relative_base = 0
-        while (True):
+        while (not self.stoprun):
             code = str(int_array[i])
             op_code = int(code[-2:])
         
@@ -44,6 +45,7 @@ class IntComp(object):
                     values[val] = relative_base + int_array[i + 1 + val]
         
             if op_code == 99:
+                self.outputdone = True
                 break
             elif op_code == 1:
                 int_array[values[2]] = int_array[values[0]] + int_array[values[1]]
@@ -52,7 +54,7 @@ class IntComp(object):
                 int_array[values[2]] = int_array[values[0]] * int_array[values[1]]
                 i = i + 4
             elif op_code == 3:
-                self.need_input = True
+                self.outputdone = True
                 self.events["input_write"].wait()
                 self.events["input_write"].clear()
                 int_array[values[0]] = self.input_val
@@ -94,6 +96,7 @@ class IntComp(object):
                 assert(False)
     
     def start(self):
+        self.stoprun = False
         x = threading.Thread(target=self.run, args=())
         x.start()
     
@@ -101,12 +104,12 @@ class IntComp(object):
         assert(not self.events["input_write"].is_set())
         self.events["input_write"].set()
         self.input_val = number
-        self.need_input = False
+        self.outputdone = False
         self.events["input_read"].wait()
         self.events["input_read"].clear()
     
-    def input_needed(self):
-        return self.need_input
+    def output_done(self):
+        return self.outputdone
     
     def output(self):
         self.events["output_write"].wait()
@@ -115,6 +118,9 @@ class IntComp(object):
         self.events["output_read"].set()       
 
         return rc
+    
+    def stop(self):
+        self.stoprun = True
         
     
 intcomp = IntComp("19/int_array9.txt")
