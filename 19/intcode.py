@@ -111,6 +111,9 @@ class IntComp(object):
     def output_done(self):
         return self.outputdone
     
+    def output_ready(self):
+        return self.events["output_write"].is_set()
+    
     def output(self):
         self.events["output_write"].wait()
         self.events["output_write"].clear()
